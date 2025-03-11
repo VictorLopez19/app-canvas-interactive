@@ -40,6 +40,8 @@ let nuevo = false;
 let totalRemoved = 0; // Contador para los círculos eliminados
 let totalCircles = 0;  // Total de círculos generados
 let level = 1; // Nivel inicial
+let level_speed = 1;
+let noCirculos_nivel = 1;
 let newLevel = false;
 let isPause = false;
 let isPlaying = false;
@@ -66,7 +68,7 @@ class Circle {
         this.posY = y; // Posición Y del círculo
         this.radius = radius; // Radio del círculo
         this.color = color; // Color del círculo
-        this.speed = speed; // Velocidad de movimiento del círculo
+        this.speed = speed * level_speed; // Velocidad de movimiento del círculo
 
         this.dx = dir * 0.25 * this.speed; // Cambio en la posición X
         this.dy = -0.25 * this.speed; // Cambio en la posición Y
@@ -175,7 +177,9 @@ function drawCircles() {
 
     let intervalID = setInterval(function() {
         if (!isPause) {
-            drawCircle();
+
+            for (i = 0; i< noCirculos_nivel; i++)
+                drawCircle();
 
             if (circles.length >= 20) {
                 clearInterval(intervalID);
@@ -289,6 +293,11 @@ canvas.addEventListener('click', function(event) {
         if (distance < circle.radius) {
             if (totalRemoved % 10 == 0 && totalRemoved > 0) {
                 level ++;
+
+                if (totalRemoved >= 30 ){
+                    level_speed ++;
+                    noCirculos_nivel ++;
+                }
             }
             totalRemoved++;
             animateShrink(circle, i); // Iniciar animación de reducción
